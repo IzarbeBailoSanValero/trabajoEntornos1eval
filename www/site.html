@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>pass saver - Site</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="../css/site.css" rel="stylesheet">
+</head>
+
+<body>
+    <form>
+        <!--url-->
+        <div class="mb-3">
+            <label for="Input1" class="form-label">URL</label>
+            <input type="text" class="form-control" id="Input1" placeholder="http://hello.com">
+        </div>
+        <!--user-->
+        <div class="mb-3">
+            <label for="Input2" class="form-label">User</label>
+            <input type="text" class="form-control" id="Input2" placeholder="hello">
+        </div>
+        <!--password-->
+        <div class="form-password__container">
+
+            <div class="mb-3">
+                <label for="Input3" class="form-label">Password</label>
+                <div class="password-input-container">
+                    <input type="password" class="form-control password-input" id="Input3">
+                    <h1 class="autogenerate-pasword-icon">
+                        🪪
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <!--description-->
+        <div class="mb-3">
+            <label for="Textarea1" class="form-label">Description</label>
+            <textarea class="form-control" id="Textarea1" rows="3"
+                placeholder="This is my user and my password because..."></textarea>
+        </div>
+
+        <!--buttons-->
+        <div class="form-buttons__container">
+            <button type="button" class="btn btn-primary btn-lg">Cancel</button>
+            <button type="button" class="btn btn-secondary btn-lg">Save</button>
+        </div>
+    </form>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+form{
+    width:60%;
+    margin:40px;
+}
+
+.form-buttons__container{
+    display: flex;
+    justify-content: center;
+    gap:20px;
+    align-items: center;
+}
+
+
+.btn-primary{
+    background-color:red;
+    border-color:brown
+}
+
+.btn-secondary{
+    background-color:green;
+    border-color:greenyellow;
+}
+
+.password-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+.autogenerate-pasword-icon {
+    cursor: pointer; 
+    font-size: 3.5rem;
+}
