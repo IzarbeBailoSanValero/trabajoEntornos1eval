@@ -7,28 +7,42 @@
     <title>pass saver - Site</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link href="../css/site.css" rel="stylesheet">
+    <link href="./site.css" rel="stylesheet">
+    <script src="./site.js" defer></script>
 </head>
 
 <body>
+    <h1 class="titleAddSite">Add a new site to your credentials list 🔐</h1>
     <form>
+        <!--category-->
+        <div id="dropdownContainer" class="mb-3">
+            <label for="customSelect" class="form-label">Which is the category of this item?</label>
+            <select id="customSelect" class="custom-select">
+               
+            </select>
+        </div>
         <!--url-->
         <div class="mb-3">
-            <label for="Input1" class="form-label">URL</label>
-            <input type="text" class="form-control" id="Input1" placeholder="http://hello.com">
+            <label for="inputUrl" class="form-label">URL</label>
+            <input type="text" class="form-control" id="inputUrl" placeholder="http://hello.com">
+        </div>
+         <!--name-->
+        <div class="mb-3">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName" placeholder="My Site Name">
         </div>
         <!--user-->
         <div class="mb-3">
-            <label for="Input2" class="form-label">User</label>
-            <input type="text" class="form-control" id="Input2" placeholder="hello">
+            <label for="inputUser" class="form-label">User</label>
+            <input type="text" class="form-control" id="inputUser" placeholder="hello">
         </div>
         <!--password-->
         <div class="form-password__container">
 
             <div class="mb-3">
-                <label for="Input3" class="form-label">Password</label>
+                <label for="inputPassword" class="form-label">Password</label>
                 <div class="password-input-container">
-                    <input type="password" class="form-control password-input" id="Input3">
+                    <input type="password" class="form-control password-input" id="inputPassword">
                     <h1 class="autogenerate-pasword-icon">
                         🪪
                     </h1>
@@ -41,15 +55,15 @@
         </div>
         <!--description-->
         <div class="mb-3">
-            <label for="Textarea1" class="form-label">Description</label>
-            <textarea class="form-control" id="Textarea1" rows="3"
+            <label for="inputDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="inputDescription" rows="3"
                 placeholder="This is my user and my password because..."></textarea>
         </div>
 
         <!--buttons-->
         <div class="form-buttons__container">
             <button type="button" class="btn btn-primary btn-lg">Cancel</button>
-            <button type="button" class="btn btn-secondary btn-lg">Save</button>
+            <button type="submit" class="btn btn-secondary btn-lg" id="SaveButton">Save</button>
         </div>
     </form>
 
