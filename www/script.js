@@ -52,7 +52,7 @@ async function renderCategories() {
     let deleteButton = document.createElement('button')
     deleteButton.textContent = '⌫';
     deleteButton.classList.add('btn', 'btn-sm', 'btn-danger');
-    deleteButton.onclick = () => deleteCategory()
+    deleteButton.onclick = () => deleteCategory(category.id)
 
     categoriesContainer.appendChild(newLi);
     newLi.appendChild(deleteButton);
@@ -225,10 +225,9 @@ async function getSites() {
   return allSites;
 }
 
-
 async function renderSitesByCategory(categoryId) {
   cleanSites();
-  console.log("has clicado el id" + categoryId);
+  //console.log("has clicado el id" + categoryId);
   const allSites = await getSites();
 
   const sitesByCategory = allSites.filter((site) => site.categoryId === categoryId);
@@ -244,7 +243,8 @@ async function renderSitesByCategory(categoryId) {
     //console.log(site)
 
     const newSiteContainer = document.createElement('tr');
-    newSiteContainer.setAttribute('id', 'newSiteContainer');
+    newSiteContainer.classList.add('newSiteContainer')
+
 
     for (let attr in site) {
 
@@ -253,7 +253,7 @@ async function renderSitesByCategory(categoryId) {
         // console.log("vamos por el atributo:  " + attr)
         //console.log("el valor del atributo es:  " + site[attr])
         const newatr = document.createElement('td');
-        newatr.setAttribute('id', 'newAttribute');
+        newatr.classList.add('newAttribute');
         newatr.setAttribute('category-id', categoryId);
         newatr.innerHTML = site[attr];
         //console.log(newatr)
@@ -278,8 +278,8 @@ async function renderSitesByCategory(categoryId) {
     const deleteSiteBtn = newActionsField.querySelector(".delete-site-button");
     deleteSiteBtn.addEventListener('click', () => {
       const siteId = deleteSiteBtn.dataset.siteId;
-      const categoryId = deleteSiteBtn.dataset.categoryId;
-      console.log("clic en botón con siteId:", siteId, "pertenece a la categoría", categoryId);
+      const categoryId = parseInt(deleteSiteBtn.dataset.categoryId);
+      //console.log("clic en botón con siteId:", siteId, "pertenece a la categoría", categoryId);
       deleteSite(siteId, categoryId)
     });
 
@@ -287,15 +287,11 @@ async function renderSitesByCategory(categoryId) {
     //console.log(newActionsField) 
     SitesByCategoryContainer.appendChild(newSiteContainer)
     newSiteContainer.appendChild(newActionsField)
-
-    
-
   });
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 4. BORRAR SITE                                                      app.delete('/sites/:id',delSite)
+//FUNCIONALIDAD 4. BORRAR SITE                                                      app.delete('/sites/:id',delSite)    //TODO PROBADO, FUNCIONA 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function deleteSite(siteId, categoryId) {
@@ -317,7 +313,7 @@ try {
   if (!response.ok){
     throw new Error("error al intentar eliminar el site")
   }
-  console.log(response.status);
+  console.log("site eliminado con éxito:  ", response.status);
   
   
 } catch (error) {
