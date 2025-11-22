@@ -1,7 +1,6 @@
 const urlBase = 'http://localhost:3000'
 
 //INICIALIZACIÓN DE LA PÁGINA
-
 async function getCategories() {
     {
         try {
@@ -77,14 +76,17 @@ function renderDropdown(categories) {
 
 //qué pasa cuando el usuario hace submit, función orquestadora
 const form = document.querySelector("form");
+
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault(); //evita el comportamiento tradicional del submit en html. Así no recarga la pagina ni evia la info con su método tradicional;  lo hago yo aquí con fetch
     const inputs = formChecker();
     const categories = await getCategories();
     const category = getCategorySelected(categories, inputs)
-    const postBody = createPostBody(category,  inputs);
-    postSite(postBody, category )
-
+    const postBody = createPostBody(category, inputs);
+    postSite(postBody, category);
+    window.location.href = "./index.html";
+    alert("site añadido con éxito")
 })
 
 
@@ -158,8 +160,8 @@ function formChecker() {
 }
 
 
-    function getCategorySelected(categories, inputs){
-     let category;
+function getCategorySelected(categories, inputs) {
+    let category;
     // console.log("categories", categories);
     // console.log( "input 5", inputs[5].value);
     try {
@@ -172,10 +174,10 @@ function formChecker() {
     }
     return category;
 }
-    
+
 
 //CONSTRUCCIÓN DE OBJETO (POST)
-function createPostBody(category,inputs) {
+function createPostBody(category, inputs) {
 
     //construir el body de la petición
     const postBody = {
@@ -194,26 +196,32 @@ function createPostBody(category,inputs) {
 
 //ENVÍO DE FORMULARIO
 async function postSite(postBody, category) {
-   try {
-     const url = `${urlBase}/categories/${category.id}`
+    try {
+        const url = `${urlBase}/categories/${category.id}`
 
-    const options = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postBody)
+        const options = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(postBody)
+        }
+
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error("error al enviar nuevo sitio");
+        }
+
+        const newSite = await response.json()
+        console.log("nuevo sitio creado: ", newSite)
+        return newSite
+    } catch (error) {
+        console.error("error en el envío de datos para la creación de nuevo sitio", error.message)
     }
 
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        throw new Error("error al enviar nuevo sitio");
-    }
-
-    const newSite = await response.json()   
-    console.log("nuevo sitio creado: ", newSite)
-    return newSite
-   } catch (error) {
-    console.error("error en el envío de datos para la creación de nuevo sitio", error.message)
-   }
-
-   
 }
+
+//BOTÓN DE CANCELAR
+const cancelButton = document.getElementById("CancelButton");
+
+cancelButton.addEventListener('click', ()=>{
+     window.location.href = "./index.html";
+})

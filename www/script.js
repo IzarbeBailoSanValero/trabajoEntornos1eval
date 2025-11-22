@@ -3,7 +3,7 @@
 const urlBase = 'http://localhost:3000'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 0 : GETALL CATEGORIES + RENDERIZAR CATEGORÍAS EN EL ASIDE       app.get('/categories',listCategories) //TODO PROBADO, FUNCIONA  
+//FUNCIONALIDAD 0 : GETALL CATEGORIES + RENDERIZAR CATEGORÍAS EN EL ASIDE       app.get('/categories',listCategories)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function getCategories() {
   let url = `${urlBase}/categories`;
@@ -20,7 +20,7 @@ async function getCategories() {
 
   } catch (error) {
     console.log(error)
-    return error;
+    return [];
   }
 }
 
@@ -63,7 +63,7 @@ async function renderCategories() {
 renderCategories();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 0.2: GET BY ID        app.get('/categories/:id', listCategorySites) //TODO PROBADO, FUNCIONA  
+//FUNCIONALIDAD 0.2: GET BY ID        app.get('/categories/:id', listCategorySites) 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function getCategoryById(idCategory) {
@@ -84,17 +84,20 @@ async function getCategoryById(idCategory) {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 1. AÑADIR NUEVA CATEGORÍA           app.post('/categories', addNewCategory). //TODO PROBADO, FUNCIONA  
+//FUNCIONALIDAD 1. AÑADIR NUEVA CATEGORÍA           app.post('/categories', addNewCategory). 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function postCategory(categoryName) {
+  //console.log("CATEGORY NAME: ", categoryName)
 
-  const alreadyExist = (() => {
-    const founded = arrCategories.find(cat => category.name === categoryName);
-    if (founded !== undefined) return false;
-    return true;
-  })();
+  const arrCategories = await getCategories();
 
-  if (!alreadyExist) {
+  const founded = arrCategories.find(cat => cat.name === categoryName);
+
+  console.log("founded", founded)
+
+
+  if (founded == undefined) //no existe, la creamos
+  {
     //0.DEFINO URL
     const url = `${urlBase}/categories`;
 
@@ -121,15 +124,23 @@ async function postCategory(categoryName) {
       }
 
       const newCategory = await response.json();
-      console.log(`categoría creada : ${newCategory}`)
+      console.log(`categoría creada : ${newCategory.name}`)
+      renderCategories();
+
+return true;
+
+
 
     } catch (error) {
       console.log(error)
+      return false;
     }
   } else {
     console.log("ya existe esa categoría")
     alert("ya existe esa categoría")
+    return false;
   }
+
 
 
 }
@@ -141,8 +152,8 @@ async function setupCategoryForm() {
 
 
 
-  //2. establezco onclick al pulsar le botón
-  submitButton.addEventListener('click', () => {
+  //2. establezco onclick al pulsar el botón
+  submitButton.addEventListener('click', async() => {
     //extraigo datos del input
     const categoryName = input.value;
 
@@ -153,10 +164,26 @@ async function setupCategoryForm() {
     }
 
     //invoco a post
-    postCategory(categoryName);
+   const response =  await postCategory(categoryName);
 
-    //limpiar el input y cerrar el modal!
+    if(response){
+
+    //limpiar el input 
     input.value = '';
+
+    //esconder el modal: lo miro, no se como se maneja en bootstrap
+
+    const categoryModal = document.getElementById("categoriesModal");
+
+    // 1. Crea la instancia del objeto Modal de Bootstrap
+    const modalInstancia = bootstrap.Modal.getInstance(categoryModal) || new bootstrap.Modal(categoryModal);
+
+    // 2. Cierra el modal
+    modalInstancia.hide();
+    }
+
+
+
   }
   )
 }
@@ -165,7 +192,7 @@ setupCategoryForm();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 2. ELIMINAR UNA CATEGORÍA          app.delete('/categories/:id',delCategory)    //TODO PROBADO, FUNCIONA 
+//FUNCIONALIDAD 2. ELIMINAR UNA CATEGORÍA          app.delete('/categories/:id',delCategory)   
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function deleteCategory(idCategory) {
   //0.DEFINO URL + 1. introduzco el parámetro a pasar
@@ -173,7 +200,7 @@ async function deleteCategory(idCategory) {
   //console.log("la categoria a eliminar tiene id " + idCategory + " y la url es " + url)
 
 
-  //2. defino options --> agrupa todos los elementos de la solicictud
+  //2. options para enviar a la peticion
   const options = {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' }
@@ -207,9 +234,7 @@ async function deleteCategory(idCategory) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 3. VER SITES BY CATEGORIA       Visualizar los sites de una categoría: Al seleccionar una categoría, deberemos
-//recuperar del servidor los sites asociados a esa categoría y pintarlos como se ve
-//en la Figura 1.                                                                      app.get('/sites',listSites)//TODO PROBADO, FUNCIONA 
+//FUNCIONALIDAD 3. VER SITES BY CATEGORIA                                  app.get('/sites',listSites)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function cleanSites() {
   let SitesByCategoryContainer = document.getElementById('SitesByCategoryContainer');
@@ -235,7 +260,6 @@ async function renderSitesByCategory(categoryId) {
 
 
   //enlazo con el html
-
   const SitesByCategoryContainer = document.getElementById('SitesByCategoryContainer');
 
 
@@ -291,7 +315,7 @@ async function renderSitesByCategory(categoryId) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//FUNCIONALIDAD 4. BORRAR SITE                                                      app.delete('/sites/:id',delSite)    //TODO PROBADO, FUNCIONA 
+//FUNCIONALIDAD 4. BORRAR SITE                                                      app.delete('/sites/:id',delSite)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function deleteSite(siteId, categoryId) {
@@ -302,24 +326,24 @@ async function deleteSite(siteId, categoryId) {
 
   const options = {
     method: 'DELETE',
-     headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' }
   }
 
 
 
-try {
-  
-  const response = await fetch(url , options)
-  if (!response.ok){
-    throw new Error("error al intentar eliminar el site")
-  }
-  console.log("site eliminado con éxito:  ", response.status);
-  
-  
-} catch (error) {
-  console.error(error.message)
-}
+  try {
 
-//refrescar la lista de sites
- renderSitesByCategory(categoryId);
+    const response = await fetch(url, options)
+    if (!response.ok) {
+      throw new Error("error al intentar eliminar el site")
+    }
+    console.log("site eliminado con éxito:  ", response.status);
+
+
+  } catch (error) {
+    console.error(error.message)
+  }
+
+  //refrescar la lista de sites
+  renderSitesByCategory(categoryId);
 }
