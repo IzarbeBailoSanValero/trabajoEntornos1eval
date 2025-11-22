@@ -125,7 +125,7 @@ async function postCategory(categoryName) {
 
       const newCategory = await response.json();
       console.log(`categoría creada : ${newCategory.name}`)
-      renderCategories();
+      
 
 return true;
 
@@ -230,6 +230,7 @@ async function deleteCategory(idCategory) {
 
   } catch (error) {
     console.error("Error en el proceso de borrado de categoria:", error);
+    return null;
   }
 }
 
