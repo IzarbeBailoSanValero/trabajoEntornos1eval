@@ -125,9 +125,9 @@ async function postCategory(categoryName) {
 
       const newCategory = await response.json();
       console.log(`categoría creada : ${newCategory.name}`)
-      
 
-return true;
+
+      return response;
 
 
 
@@ -153,7 +153,7 @@ async function setupCategoryForm() {
 
 
   //2. establezco onclick al pulsar el botón
-  submitButton.addEventListener('click', async() => {
+  submitButton.addEventListener('click', async () => {
     //extraigo datos del input
     const categoryName = input.value;
 
@@ -163,25 +163,33 @@ async function setupCategoryForm() {
       return;
     }
 
-    //invoco a post
-   const response =  await postCategory(categoryName);
 
-    if(response){
+    try {
+      //invoco a post
+      const response = await postCategory(categoryName);
+      if (response.ok) {
+          //ahora debo renderizar de nuevo las categorías para incluirlo
+        cleanCategoriesList();
+        renderCategories();
 
-    //limpiar el input 
-    input.value = '';
+        //limpiar el input 
+        input.value = '';
 
-    //esconder el modal: lo miro, no se como se maneja en bootstrap
+        //esconder el modal: lo miro, no se como se maneja en bootstrap
 
-    const categoryModal = document.getElementById("categoriesModal");
+        const categoryModal = document.getElementById("categoriesModal");
 
-    // 1. Crea la instancia del objeto Modal de Bootstrap
-    const modalInstancia = bootstrap.Modal.getInstance(categoryModal) || new bootstrap.Modal(categoryModal);
+        // 1. Crea la instancia del objeto Modal de Bootstrap
+        const modalInstancia = bootstrap.Modal.getInstance(categoryModal) || new bootstrap.Modal(categoryModal);
+        // 2. Cierra el modal
+        modalInstancia.hide();
 
-    // 2. Cierra el modal
-    modalInstancia.hide();
+      }
+
+    } catch (error) {
+      console.error("error al enviar la categoría", error.message)
+        modalInstancia.hide();
     }
-
 
 
   }

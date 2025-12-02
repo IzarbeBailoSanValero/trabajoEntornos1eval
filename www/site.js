@@ -35,7 +35,6 @@ async function getCategories() {
     }
 }
 
-
 function renderDropdown(categories) {
     //container
     const selectElement = document.getElementById("customSelect");
@@ -59,7 +58,6 @@ function renderDropdown(categories) {
 
 }
 
-
 (async function initialize() {
     //tomo datos
     let categories = await getCategories();
@@ -72,7 +70,6 @@ function renderDropdown(categories) {
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //FUNCIONALIDAD 3. AÑADIR UN SITE TO CATEGORIA  
 // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 //qué pasa cuando el usuario hace submit, función orquestadora
 const form = document.querySelector("form");
@@ -144,7 +141,7 @@ function formChecker() {
     //console.log("los inputs registrados son:  ", inputs)
 
     //elementos a validar no vacíos
-    const inputsMandatory = [inputs[0], inputs[2], inputs[3], inputs[4]];
+    const inputsMandatory = [inputs[0], inputs[2], inputs[3]];
 
     for (let inp of inputsMandatory) {
         if (!inp.value) {
@@ -194,7 +191,7 @@ function createPostBody(category, inputs) {
 
 }
 
-//ENVÍO DE FORMULARIO
+//ENVÍO DE FORMULARIO        POST SITE
 async function postSite(postBody, category) {
     try {
         const url = `${urlBase}/categories/${category.id}`
@@ -222,6 +219,116 @@ async function postSite(postBody, category) {
 //BOTÓN DE CANCELAR
 const cancelButton = document.getElementById("CancelButton");
 
-cancelButton.addEventListener('click', ()=>{
-     window.location.href = "./index.html";
+cancelButton.addEventListener('click', () => {
+    window.location.href = "./index.html";
 })
+
+
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FUNCIONALIDAD 6. AUTOGENERAR CONTRASEÑA SEGURA         //TODO: BIEN
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//añadir onclick al. icono
+const autogeneratePassIcon = document.getElementById("autogeneratePassIcon");
+autogeneratePassIcon.addEventListener('click', (e) => {
+    let myRandomPassword = calculatePassword();
+    const inputPassword = document.getElementById("inputPassword");
+    inputPassword.value = myRandomPassword;
+    console.log("nueva contraseña: ", myRandomPassword)
+    
+    ////////////////////////
+})
+
+
+//algoritmo para generación de contraseña --> min 8 caracteres + no solo alfanum (añadire caracteres especiales + mayusc/minusc)
+function calculatePassword() {
+    //defino tipos de carácter para hace rrandoms con ellos
+    const numbersASCII = (() => {
+        let array = [];
+        for (let x = 48; x <= 57; x++) {
+            array.push(x);
+        }
+        return array
+    })();
+
+    const capitalsASCII = (() => {
+        let array = [];
+        for (let x = 65; x <= 90; x++) {
+            array.push(x);
+        }
+        return array
+    })();
+
+    const lowersASCII = (() => {
+        let array = [];
+        for (let x = 97; x <= 122; x++) {
+            array.push(x);
+        }
+        return array
+    })();
+
+    const symbolsASCII = (() => {
+        let array = [];
+        for (let x = 32; x <= 47; x++) {
+            array.push(x);
+        }
+        return array
+    })();
+
+    //BUSCO COMO HACER EL SPREAD OPERATOR Y TAMBIÉN AYUDA PARA LA CONVERISON DE ASCI A CARACTER Y MATH FLOOR-MATH RANDOM + COMO BARAJAR VALORES
+
+    //creo alphabet que una todas --> vuelco los arrays (spread operator)
+    const myAlphabetASCII = [...numbersASCII, ...capitalsASCII, ...lowersASCII, ...symbolsASCII]
+
+    let password = "";
+
+
+    let randomer = function (array) {
+        let randomIndex = Math.floor(Math.random() * array.length); // índice entre 0 y length-1
+        let code = array[randomIndex]; //random ASCII value
+        let randomChar = String.fromCharCode(code); //random char
+        password += randomChar; //concateno
+    }
+
+    for (let index = 0; index < 16; index++) {
+       // console.log ("vuelta: ", index)
+        switch (index) {
+            case 0:
+                randomer(numbersASCII);
+                break;
+            case 1:
+                randomer(capitalsASCII);
+                break;
+            case 2:
+                randomer(lowersASCII);
+                break;
+            case 3:
+                randomer(symbolsASCII);
+                break;
+            default:
+                randomer(myAlphabetASCII);
+               
+        }
+
+
+        //shuffle --> lo busco
+        let arr = password.split(""); //separo por caracteres y creo un array
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        password = arr.join(""); //lo uno de nuevo en un string
+
+        
+
+    }
+
+return password;
+
+
+}
+
+
+
+
