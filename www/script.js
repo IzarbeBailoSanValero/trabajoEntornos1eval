@@ -45,6 +45,11 @@ async function renderCategories() {
     //console.log(category.id);
     newLi.setAttribute('id', 'categoryListItem');
     newLi.onclick = () => {
+      //inserto el titulo de la catgeoria
+      const titleCategory = document.getElementById("titleCategory");
+      titleCategory.innerHTML = `${category.name}`
+
+      //inserto sites
       renderSitesByCategory(category.id)
     }
 
@@ -137,7 +142,7 @@ async function postCategory(categoryName) {
     }
   } else {
     console.log("ya existe esa categoría")
-    alert("ya existe esa categoría")
+    Swal.fire("ya existe esa categoría")
     return false;
   }
 
@@ -159,7 +164,7 @@ async function setupCategoryForm() {
 
     //compruebo que el input no esté vacío
     if (!categoryName.trim()) {
-      alert('es necesario asignar un nombre a la categoría')
+      Swal.fire('es necesario asignar un nombre a la categoría')
       return;
     }
 
@@ -168,7 +173,7 @@ async function setupCategoryForm() {
       //invoco a post
       const response = await postCategory(categoryName);
       if (response.ok) {
-          //ahora debo renderizar de nuevo las categorías para incluirlo
+        //ahora debo renderizar de nuevo las categorías para incluirlo
         cleanCategoriesList();
         renderCategories();
 
@@ -188,7 +193,7 @@ async function setupCategoryForm() {
 
     } catch (error) {
       console.error("error al enviar la categoría", error.message)
-        modalInstancia.hide();
+      modalInstancia.hide();
     }
 
 
@@ -229,7 +234,7 @@ async function deleteCategory(idCategory) {
     const response = await fetch(url, options)
     if (!response.ok) {
       console.log("error al borrar categoría")
-      alert("error al borrar categoría")
+      Swal.fire("error al borrar categoría")
     }
 
     cleanCategoriesList();
@@ -355,4 +360,115 @@ async function deleteSite(siteId, categoryId) {
 
   //refrescar la lista de sites
   renderSitesByCategory(categoryId);
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//FUNCIONALIDAD 7. BARRA DE BÚSQUEDA QUE FILTRA POR SITE O CATEGORÍA
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const searchBtn = document.getElementById("searchBtn")
+const ulContainer = document.getElementById("ulContainer")
+
+// event listener en la lupa 
+searchBtn.addEventListener('click', async () => {
+  // Limpiar resultados anteriores
+  ulContainer.innerHTML = "";
+
+  //recojo el input de texto
+  const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
+  if(!searchInput) return;
+  console.log("search input toLower: ", searchInput)
+
+  const radioOptions = document.querySelectorAll(".radio-option");
+
+  //recojo la opción del rdio button ---> miro como se hace para recoger el valor
+  let selectedType = (() => {
+    for (let option of radioOptions) {
+      if (option.checked) {
+        console.log("selected type:", option.value)
+        return option.value
+      }
+    }
+  })();
+
+  //traigo resultados de filtrado
+  let fitsCriteriaArray = await filterByBoth(selectedType, searchInput);
+  console.log("array que cumple criterios: ", fitsCriteriaArray)
+
+  //2. RENDERIZADO----: genero ul con los lis coincidentes
+  const ul = document.createElement('ul')
+  ul.classList.add("list-group", "results-from-search")
+
+  //Si no hay resultados coincidentes lo communico y no hago más
+  if (fitsCriteriaArray.length === 0){
+    const li = document.createElement('li');
+    li.textContent = "No se encontraron coincidencias.";
+    ul.appendChild(li);
+    ulContainer.appendChild(ul);
+    return;
+  }
+  //para obtener luego sites por categoría: 
+  const allSites = await getSites();
+
+  fitsCriteriaArray.forEach(item => {
+    console.log("entro aquí")
+    const li = document.createElement('li')
+    console.log("item:  ", item)
+
+    if (selectedType === "categories") {
+      //obtengo sites por esa categoria
+      const sitesByCategory = allSites.filter((site) => site.categoryId === item.id);
+      console.log("sites de esta categoría: ", sitesByCategory)
+
+
+      li.innerHTML = `
+    <h5>categoria encontrada: ${item.name}</h5>
+    <p>Sites asociados a esa categoría: </p>
+    `
+      sitesByCategory.forEach(site => {
+        li.innerHTML += `<p>${site.name} --> url: ${site.url}  , user: ${site.user}
+      </p><br>`
+      });
+
+    } else if (selectedType === "sites") {
+      
+      li.innerHTML = `
+    <h5>site encontrado:</h5> <h1>${item.name}</h1> <p>sus datos principales asociados son: </p>
+    <p>url: ${item.url}  ,       user: ${item.user},      fecha de creación: ${item.createdAt}</p>`  
+    }
+    ul.appendChild(li)
+
+  });
+
+  ulContainer.appendChild(ul)
+
+})
+
+
+
+
+
+
+
+async function filterByBoth(selectedType, searchInput) {
+  if (selectedType === 'categories') {
+    //busca por categorias
+    const listAllCategories = await getCategories();
+    const fitsCriteriaArray = listAllCategories.filter((cat) => cat.name.toLowerCase() === searchInput);
+    return fitsCriteriaArray
+
+
+
+
+
+  } else if (selectedType === 'sites') {
+    //busca por site
+    const listAllSites = await getSites();
+
+    const fitsCriteriaArray = listAllSites.filter((site) => site.name.toLowerCase() === searchInput);
+
+    return fitsCriteriaArray
+  }
 }

@@ -23,7 +23,7 @@ async function getCategories() {
                 throw new Error(`valor null de las categorias`);
             } else if (data.length === 0) {
                 console.log("la lista de categorías está vacía");
-                alert("no hay categorías para seleccionar");
+                Swal.fire("no hay categorías para seleccionar");
             }
 
             return data;
@@ -83,8 +83,57 @@ form.addEventListener('submit', async (e) => {
     const postBody = createPostBody(category, inputs);
     postSite(postBody, category);
     window.location.href = "./index.html";
-    alert("site añadido con éxito")
+    Swal.fire("site añadido con éxito")
 })
+
+
+
+
+//FUNCIONALIDAD EXTRA: SI LA LONGITUD DE LA CONTRASEÑA NO ES LA INDICADA, LO INDICAMOS WHEN BLUR
+//en bootstrap los items con esa clase de invalid feedback se muestran directamente en roj
+const inputPassword = document.getElementById("inputPassword");
+const invalidFieldPassword = document.getElementById("invalid-feedback");
+
+function validatePaswordLength(){
+    let pass = inputPassword.value;
+
+    if(pass.length < 8){
+        invalidFieldPassword.style.visibility = 'visible'
+        invalidFieldPassword.style.display = "block";
+        console.log("aviso visible")
+    }else{
+        invalidFieldPassword.style.visibility = 'hidden'
+        console.log("aviso no visible")
+    }
+}
+
+
+inputPassword.addEventListener('blur', validatePaswordLength)
+
+
+//si el nombre esta vacío, también lo mostramos
+const inputName = document.getElementById("inputName");
+const invalidFieldName = document.getElementById("invalid-feedback--name");
+
+function validateNameLength(){
+    let name = inputName.value.trim();
+
+    if(name.length === 0){
+        invalidFieldName.style.visibility = 'visible'
+        invalidFieldName.style.display = "block";
+        console.log("aviso visible para nombre")
+    }else{
+        invalidFieldName.style.visibility = 'hidden'
+        console.log("aviso no visible")
+    }
+}
+
+inputName.addEventListener('blur', validateNameLength)
+
+
+
+
+
 
 
 
@@ -145,7 +194,7 @@ function formChecker() {
 
     for (let inp of inputsMandatory) {
         if (!inp.value) {
-            alert(`el campo ${inp.name} no puede estar vacío`);
+            Swal.fire(`el campo ${inp.name} no puede estar vacío`);
             console.error(`el campo ${inp.name} no puede estar vacío`);
             isFormValid = false;
             console.log("el fomrulario NO es válido")

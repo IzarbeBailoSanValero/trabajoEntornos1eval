@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pass saver index</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link href="styles.css" rel="stylesheet">
@@ -13,16 +14,39 @@
 
 <body>
   <header class="m-3">
-  <div class="btn-group" role="group" aria-label="Botones de acción">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoriesModal">
-      Add category
-    </button>
-    
-    <a href="site.html" id="addSiteButton" class="btn btn-primary" role="button">
-      Add site
-    </a>
-  </div>
-</header>
+    <div class="btn-group" role="group" aria-label="Botones de acción">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoriesModal">
+        Add category
+      </button>
+
+      <a href="site.html" id="addSiteButton" class="btn btn-primary" role="button">
+        Add site
+      </a>
+    </div>
+
+
+
+
+    <!--barra de búsqueda-->
+    <div class="input-group mb-3">
+      <input id="searchInput" type="text" class="form-control" placeholder="Buscar...">
+      <button id="searchBtn" class="btn btn-primary" type="button">🔍</button>
+    </div>
+  <!--radio-buttons para elegir criterio de busqueda (de bootstrap)-->
+    <div class="mb-3">
+      <label><input class="radio-option" type="radio" name="searchType" value="categories" checked> Categories</label>
+      <label><input class="radio-option" type="radio" name="searchType" value="sites"> Sites</label>
+    </div>
+
+    <div class="ul-container" id="ulContainer">
+
+    </div>
+
+
+
+
+
+  </header>
 
   <aside class="m-3">
     <h2>Categories</h2>
@@ -33,6 +57,8 @@
   </aside>
 
   <main class="m-3">
+    <h1 class="title-category" id="titleCategory"></h1>
+    <br>
     <table class="table">
       <thead>
         <tr>
@@ -65,7 +91,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Cancelar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary" id="addCategoryOK">OK</button>
         </div>
       </div>

@@ -16,9 +16,9 @@
     <form>
         <!--category-->
         <div id="dropdownContainer" class="mb-3">
-            <label for="customSelect" class="form-label">Which is the category of this item?</label>
+            <label for="customSelect" class="form-label ">Which is the category of this item?</label>
             <select id="customSelect" class="custom-select">
-               
+
             </select>
         </div>
         <!--url-->
@@ -26,10 +26,11 @@
             <label for="inputUrl" class="form-label">URL</label>
             <input type="text" class="form-control" id="inputUrl" placeholder="http://hello.com">
         </div>
-         <!--name-->
+        <!--name-->
         <div class="mb-3">
             <label for="inputName" class="form-label">Name</label>
             <input type="text" class="form-control" id="inputName" placeholder="My Site Name">
+             <p class="invalid-feedback" id="invalid-feedback--name">name field is empty!<p></p>
         </div>
         <!--user-->
         <div class="mb-3">
@@ -43,6 +44,7 @@
                 <label for="inputPassword" class="form-label">Password</label>
                 <div class="password-input-container">
                     <input type="password" class="form-control password-input" id="inputPassword">
+                    <p class="invalid-feedback" id="invalid-feedback">password field is invalid!<p>
                     <h1 class="autogenerate-pasword-icon" id="autogeneratePassIcon">
                         🪪
                     </h1>
