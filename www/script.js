@@ -156,6 +156,14 @@ async function setupCategoryForm() {
   let input = document.getElementById('categoryName');
 
 
+        //esconder el modal: lo miro, no se como se maneja en bootstrap
+
+        const categoryModal = document.getElementById("categoriesModal");
+
+        //  Crea la instancia del objeto Modal de Bootstrap --> LO USARE PARA OCULTARLO
+        const modalInstancia = bootstrap.Modal.getInstance(categoryModal) || new bootstrap.Modal(categoryModal);
+
+
 
   //2. establezco onclick al pulsar el botón
   submitButton.addEventListener('click', async () => {
@@ -180,12 +188,6 @@ async function setupCategoryForm() {
         //limpiar el input 
         input.value = '';
 
-        //esconder el modal: lo miro, no se como se maneja en bootstrap
-
-        const categoryModal = document.getElementById("categoriesModal");
-
-        // 1. Crea la instancia del objeto Modal de Bootstrap
-        const modalInstancia = bootstrap.Modal.getInstance(categoryModal) || new bootstrap.Modal(categoryModal);
         // 2. Cierra el modal
         modalInstancia.hide();
 
@@ -194,6 +196,7 @@ async function setupCategoryForm() {
     } catch (error) {
       console.error("error al enviar la categoría", error.message)
       modalInstancia.hide();
+
     }
 
 
