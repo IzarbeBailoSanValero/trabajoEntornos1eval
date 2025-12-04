@@ -456,7 +456,7 @@ searchBtn.addEventListener('click', async () => {
 
 
 async function filterByBoth(selectedType, searchInput) {
-  if (selectedType === 'categories') {
+  if (selectedType.includes("categories")) {
     //busca por categorias
     const listAllCategories = await getCategories();
     const fitsCriteriaArray = listAllCategories.filter((cat) => cat.name.toLowerCase() === searchInput);
@@ -466,7 +466,7 @@ async function filterByBoth(selectedType, searchInput) {
 
 
 
-  } else if (selectedType === 'sites') {
+  } else if (selectedType.includes('sites')) {
     //busca por site
     const listAllSites = await getSites();
 
