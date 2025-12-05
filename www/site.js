@@ -78,6 +78,11 @@ const form = document.querySelector("form");
 form.addEventListener('submit', async (e) => {
     e.preventDefault(); //evita el comportamiento tradicional del submit en html. Así no recarga la pagina ni evia la info con su método tradicional;  lo hago yo aquí con fetch
     const inputs = formChecker();
+
+    if (!inputs) {
+        console.log("Deteniendo el envío porque el formulario no es válido.");
+        return; 
+    }
     const categories = await getCategories();
     const category = getCategorySelected(categories, inputs)
     const postBody = createPostBody(category, inputs);
@@ -140,9 +145,7 @@ inputName.addEventListener('blur', validateNameLength)
 //CHEQUEO DEL FORMULARIO
 function formChecker() {
 
-    //booleano de resultado
-    let isFormValid = true;
-
+    
 
     //identifico resultados de inputs
     const inputName = document.getElementById("inputName");
@@ -196,12 +199,28 @@ function formChecker() {
         if (!inp.value) {
             Swal.fire(`el campo ${inp.name} no puede estar vacío`);
             console.error(`el campo ${inp.name} no puede estar vacío`);
-            isFormValid = false;
             console.log("el fomrulario NO es válido")
-            return;
+            return false;
         }
     }
-    console.log("el fomrulario es válido")
+
+    if (inputs[3].value.length < 8) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Contraseña insegura',
+            text: 'La contraseña debe tener al menos 8 caracteres'
+        });
+        return false;
+    }
+
+    
+    if (inputs[5].value === "" || inputs[5].value.includes("no hay categorías")) {
+        Swal.fire('Debes seleccionar una categoría válida');
+        return false;
+    }
+
+    // Si el código llega hasta aquí, es que no ha entrado en ningún error
+    console.log("El formulario es válido");
     return inputs;
 }
 
@@ -231,8 +250,7 @@ function createPostBody(category, inputs) {
         "url": inputs[1].value,
         "user": inputs[2].value,
         "password": inputs[3].value,
-        "description": inputs[4].value,
-        "categoryId": category.id
+        "description": inputs[4].value
     }
 
     console.log("el cuerpo de la petición post será ", postBody)
@@ -261,6 +279,7 @@ async function postSite(postBody, category) {
         return newSite
     } catch (error) {
         console.error("error en el envío de datos para la creación de nuevo sitio", error.message)
+        Swal.fire("Error al guardar el sitio");
     }
 
 }
@@ -285,6 +304,7 @@ autogeneratePassIcon.addEventListener('click', (e) => {
     const inputPassword = document.getElementById("inputPassword");
     inputPassword.value = myRandomPassword;
     console.log("nueva contraseña: ", myRandomPassword)
+    validatePaswordLength()
     
     ////////////////////////
 })
@@ -369,7 +389,7 @@ function calculatePassword() {
         }
         password = arr.join(""); //lo uno de nuevo en un string
 
-        
+    
 
     }
 
