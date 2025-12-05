@@ -240,6 +240,13 @@ async function deleteCategory(idCategory) {
       Swal.fire("error al borrar categoría")
     }
 
+    Swal.fire({
+  icon: 'success',
+  title: '¡Eliminada!',
+  text: 'La categoría ha sido eliminada con éxito',
+  showConfirmButton: false,
+  timer: 1500
+});
     cleanCategoriesList();
     renderCategories();
 
