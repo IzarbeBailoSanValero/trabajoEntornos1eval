@@ -229,7 +229,7 @@ async function deleteCategory(idCategory) {
 
     //salgo sino
     if (!categoryToDelete) {
-      console.log("No existe la categoría con ese id");
+      console.log("No existe la categoría con ese id");  
       return;
     }
 
